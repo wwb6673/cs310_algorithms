@@ -1,0 +1,96 @@
+\documentclass[11pt]{article}
+\usepackage[paper=letterpaper, left=1in, right=1in, top=1in, bottom=1in]
+           {geometry}
+\usepackage[parfill]{parskip}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+\usepackage{upquote}
+\usepackage{mathtools}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+
+\begin{document}
+\thispagestyle{empty}
+
+\begin{center}
+{\large CS 310}\\
+Assignment 207
+\end{center}
+
+\begin{flushright}
+William Briggs
+\end{flushright}
+
+\textbf{Problem 2.} Analyze your two methods. Explain what operations you are counting, what the input size is, and what your results are.
+
+\begin{Verbatim}[numbers=left,xleftmargin=5mm]
+  void reverse()
+  {
+    Node * node_ptr {first};    //keeps track of the current node
+    Node * prev_ptr {nullptr};  //keeps track of the previous node
+    Node * next_ptr {nullptr};  //keeps track of the next node
+    while(node_ptr != nullptr)
+    {
+      next_ptr = node_ptr->next; //moves the next pointer down the list
+      node_ptr->next = prev_ptr; //current node points to prev node
+      prev_ptr = node_ptr;       //shifts prev pointer to current pointer
+      node_ptr = next_ptr;       //shifts current pointer to the next pointer
+    }
+    //sets the head of the list to the last node
+    first = prev_ptr;
+  }
+\end{Verbatim}
+
+For the reverse() method, I count every assignment and comparison as a basic operation. Looking at lines 3-5, 14 these total a static 4 operations. This brings us to the while statement, this statement should run $n$ amount of times, where $n$ is the size of the singly linked-list. Within this statement there are 4 assignments (lines 8-11). So in total I found this method to run in:
+\[
+t(n) = 4n + 4
+\]
+\[
+t(n) \in \Theta(n)
+\]
+\begin{Verbatim}[numbers=left,xleftmargin=5mm]
+  void push_back (const Object& item)
+  {
+    auto new_node {new Node (item)};
+    if (empty())
+    {
+      first = new_node;
+    }
+    else
+    {
+      auto node_ptr {first};
+
+      //iterates through the list until a node that points to null is found
+      while(node_ptr->next != nullptr)
+      {
+        node_ptr = node_ptr->next;
+      }
+      //adds the new node to the end of the list
+      node_ptr->next = new_node;
+    }
+    size++;
+  }
+\end{Verbatim}
+
+For this method, I also am counting every assignment and comparison as a basic operation. At lines 3, 10, 18, and 20 we have a static 4 operations for the worst-case. With the while statement running $n$ times, where $n$ is the size of the singly linked-list, with one assignment inside that loop. I found this method to run in:
+\[
+t(n) = n + 4
+\]
+\[
+t(n) \in \Theta(n)
+\]
+
+I found the algorithm analysis for both of these methods to be $
+\Theta(n)$ as there is no possible variations in operation count, given the static input size.
+
+\textbf{Problem 3.} Assuming the data in a heap are all distinct, what are the possible locations of:
+Explain and justify your answers
+
+The smallest element: It must be located at the lowest or second lowest tier as it is a terminal node, having no child nodes. In terms of location in the array, it will be after the $\ceil{\frac{n}{2}}^{th}$ index of the array. This is because the max heap has the property defining trait of each parent node having to be larger than the child nodes.
+
+The second-smallest element: This will either be a sibling, parent, or cousin to the smallest element. In terms of location in the array, it will either be the $\ceil{\frac{n}{2}}^{th}$ index of the array or come after it. This is because it is possible for the second smallest element to be the parent of the smallest element, as it is by definition greater than the smallest element.
+
+The second-largest element: Will be a child node of the largest element, as the largest element is the root. Location in an array will either be index(1) or index(2), given that the root is index(0). This is because there is only one value greater than it and the second largest element must be a child of the root node; and because the child nodes of a binary heap are not ordered, there are two possibly locations for it in an array.
+
+\end{document}
